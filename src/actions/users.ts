@@ -80,7 +80,7 @@ export async function createUserAccountAction(input: {
 
     if (input.role === USER_ROLES.admin) {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       if (!supabaseUrl || !anonKey || !auth.email) {
         throw new AppError('INTERNAL_ERROR', 'Administrator verification is not configured.');
       }
@@ -96,7 +96,7 @@ export async function createUserAccountAction(input: {
       }
     }
 
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const serviceRoleKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     if (!serviceRoleKey || !supabaseUrl) {
       throw new AppError('INTERNAL_ERROR', 'Account provisioning is not configured on this server.');
@@ -185,7 +185,7 @@ export async function updateUserPermissionsAction({
     if (!email) throw new AppError('UNAUTHORIZED', 'Session is missing an email identity.');
     const statelessSupabase = createStatelessClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)!,
       { auth: { persistSession: false } }
     );
 
