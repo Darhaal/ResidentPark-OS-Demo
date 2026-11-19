@@ -1,6 +1,6 @@
 # ResidentPark OS
 
-[![CI](https://github.com/Darhaal/residentpark-os-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/Darhaal/residentpark-os-demo/actions/workflows/ci.yml)
+[![CI](https://github.com/Darhaal/ResidentPark-OS-Demo/actions/workflows/ci.yml/badge.svg)](https://github.com/Darhaal/ResidentPark-OS-Demo/actions/workflows/ci.yml)
 
 A residential parking and property-administration platform built with Next.js and
 Supabase. It manages residents, apartments, vehicles, parking assignments and
@@ -21,6 +21,17 @@ Sign in with either role (throwaway accounts on a shared demo instance; data may
 
 The admin account manages approvals, parking, vehicles, issues, disruptions, notices, and
 reports; the resident owns a unit with an assigned spot and a vehicle awaiting approval.
+
+## Product preview
+
+![Admin console — Identity Directory with residents, unit assignments, roles, and account status](screenshots/admin-console.png)
+
+*Admin console — Identity Directory: residents, unit assignments, roles, and account status
+(seeded demo data).*
+
+<p align="center">
+  <img src="screenshots/login.png" alt="ResidentPark sign-in page" width="420">
+</p>
 
 ## Engineering highlights
 
