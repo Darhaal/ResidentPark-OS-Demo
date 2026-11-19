@@ -33,6 +33,7 @@ describe('route groups', () => {
   it('matches public routes only on path boundaries', () => {
     expect(isPublicRoutePath('/login')).toBe(true);
     expect(isPublicRoutePath('/login/help')).toBe(true);
+    expect(isPublicRoutePath(ROUTES.keepAlive)).toBe(true);
     expect(isPublicRoutePath('/login-anything')).toBe(false);
   });
 

@@ -11,6 +11,8 @@ export const ROUTES = {
   authCallback: '/auth/callback',
   privacy: '/privacy',
   terms: '/terms',
+  // Vercel Cron target that keeps the free-tier Supabase project awake (see vercel.json).
+  keepAlive: '/api/keepalive',
   dashboard: '/dashboard',
   notices: '/notices',
   parking: '/parking',
@@ -57,6 +59,7 @@ export const PUBLIC_ROUTES = [
   ROUTES.authCallback,
   ROUTES.privacy,
   ROUTES.terms,
+  ROUTES.keepAlive,
 ] as const;
 
 export const LEGACY_REDIRECTS = {
