@@ -12,15 +12,18 @@ experiences.
 
 **[parking-demo-ecru.vercel.app](https://parking-demo-ecru.vercel.app)** — a seeded, self-contained demo of the full product.
 
-Sign in with either role (throwaway accounts on a shared demo instance; data may be reset):
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | `tester.admin@qa.local` | `G2&!HKwthu` |
-| Resident | `demo.alice@qa.local` | `2ykDM9su@C` |
+No sign-up and no password: on the sign-in page click **Sign in as Admin** or **Sign in as
+Resident**. A thin *Demo* bar at the top shows the current role and switches between the
+two in one click.
 
 The admin account manages approvals, parking, vehicles, issues, disruptions, notices, and
 reports; the resident owns a unit with an assigned spot and a vehicle awaiting approval.
+
+Demo accounts are **read-only**: you can open every page of both roles, but changes are rejected with
+*"Demo mode: changes are disabled."*, so the shared demo looks the same for every visitor.
+The rule lives in Postgres, not only in the UI — a statement-level trigger on every table
+rejects writes from the listed demo accounts whether they come through the app, PostgREST,
+or an RPC ([`20261126000000_demo_readonly_accounts.sql`](supabase/migrations/20261126000000_demo_readonly_accounts.sql)).
 
 ## Product preview
 
@@ -30,7 +33,7 @@ reports; the resident owns a unit with an assigned spot and a vehicle awaiting a
 (seeded demo data).*
 
 <p align="center">
-  <img src="screenshots/login.png" alt="ResidentPark sign-in page" width="420">
+  <img src="screenshots/login.png" alt="ResidentPark sign-in page with one-click demo access" width="380">
 </p>
 
 ## Engineering highlights

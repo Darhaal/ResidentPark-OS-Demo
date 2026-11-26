@@ -9,6 +9,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { AppError } from '@/lib/errors';
 import { ACCOUNT_STATUS, USER_ROLES, isAdminRole, isApprovedStatus, isSuperadminRole } from '@/config/domain';
+import { demo } from '@/localization/en/demo';
 
 export type AppRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
 
@@ -74,6 +75,17 @@ export async function requireAdmin(): Promise<AuthContext> {
     throw new AppError('FORBIDDEN', 'Administrator privileges required.');
   }
   return context;
+}
+
+/**
+ * Rejects read-only demo accounts before side effects the database trigger cannot stop
+ * (auth admin calls, invitation emails). Database writes are blocked separately by
+ * public.enforce_demo_readonly().
+ */
+export async function assertNotDemoReadOnly(context: AuthContext): Promise<void> {
+  const { data, error } = await context.supabase.rpc('is_demo_readonly');
+  if (error) throw new AppError('INTERNAL_ERROR', 'Could not verify account permissions.', error);
+  if (data === true) throw new AppError('FORBIDDEN', demo.readOnly);
 }
 
 /** Approved superadmin only. A deactivated superadmin is denied. */

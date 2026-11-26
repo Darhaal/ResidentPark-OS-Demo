@@ -15,6 +15,7 @@ import { adminUsers } from './admin-users';
 import { adminVehicles } from './admin-vehicles';
 import { auth } from './auth';
 import { common } from './common';
+import { demo } from './demo';
 import { globalSearch } from './global-search';
 import { help } from './help';
 import { invitations } from './invitations';
@@ -33,6 +34,7 @@ export const en = {
   navigation,
   auth,
   common,
+  demo,
   adminParking,
   adminDisruptions,
   adminIssues,

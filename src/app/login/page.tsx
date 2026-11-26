@@ -15,6 +15,8 @@ import { Spinner } from '@/components/ui/spinner';
 import Link from 'next/link';
 import { en } from '@/localization/en';
 import { getSafeRedirectPath, ROUTES } from '@/config/routes';
+import { isDemoMode } from '@/config/demo';
+import { DemoAccess } from '@/components/demo/DemoAccess';
 
 function LoginForm() {
   const supabase = createClient();
@@ -167,6 +169,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-muted p-4 selection:bg-muted">
       <div className="w-full max-w-md">
+        {isDemoMode() && <DemoAccess />}
         <LoginForm />
         <p className="mt-6 text-center text-xs text-muted-foreground">
           <Link href={ROUTES.terms} className="font-medium text-muted-foreground transition-colors hover:text-foreground hover:underline">

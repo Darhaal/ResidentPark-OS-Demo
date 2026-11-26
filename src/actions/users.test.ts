@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   logActionError: vi.fn(),
   logActionWarn: vi.fn(),
   requireAdmin: vi.fn(),
+  assertNotDemoReadOnly: vi.fn(),
   provisionCreatedAccount: vi.fn(),
   bulkChangeAccountStatus: vi.fn(),
   bulkUpdatePermissions: vi.fn(),
@@ -36,6 +37,7 @@ vi.mock('@/lib/action-logger', () => ({
 
 vi.mock('@/lib/auth', () => ({
   requireAdmin: mocks.requireAdmin,
+  assertNotDemoReadOnly: mocks.assertNotDemoReadOnly,
 }));
 
 vi.mock('@/services/UserService', () => ({
@@ -65,6 +67,7 @@ function setupAdmin() {
     role: 'admin',
   });
   mocks.enforceRateLimit.mockResolvedValue(undefined);
+  mocks.assertNotDemoReadOnly.mockResolvedValue(undefined);
   mocks.logActionError.mockResolvedValue(undefined);
   mocks.logActionWarn.mockResolvedValue(undefined);
   mocks.bulkChangeAccountStatus.mockResolvedValue(undefined);

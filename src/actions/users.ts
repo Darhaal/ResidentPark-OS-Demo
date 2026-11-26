@@ -13,7 +13,7 @@ import { logActionError, logActionWarn } from '@/lib/action-logger';
 import { UserService } from '@/services/UserService';
 import { AppError, toActionError, toDatabaseAppError } from '@/lib/errors';
 import { enforceRateLimit } from '@/lib/rate-limit';
-import { requireAdmin } from '@/lib/auth';
+import { assertNotDemoReadOnly, requireAdmin } from '@/lib/auth';
 import { ACCOUNT_STATUS, USER_ROLES, isSuperadminRole } from '@/config/domain';
 import { BULK_ACTION_LIMITS } from '@/config/limits';
 import { ROUTES } from '@/config/routes';
@@ -37,6 +37,9 @@ export async function createUserAccountAction(input: {
 
   try {
     const auth = await requireAdmin();
+    // Invitation emails go out before any database write, so the demo trigger alone
+    // cannot stop a read-only demo admin here.
+    await assertNotDemoReadOnly(auth);
     await enforceRateLimit(auth.supabase, 'account_create');
     if (
       !input ||

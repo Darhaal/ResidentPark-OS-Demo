@@ -1,10 +1,11 @@
 // Title: Sign-out Button (client)
 // Path: src/components/ui/SignOutButton.tsx
-// Functionality: Client component that calls supabase.auth.signOut() and redirects to /login.
+// Functionality: Client component that signs the current user out and redirects to /login.
 
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
+import { signOutCurrentUser } from '@/lib/supabase/sign-out';
 import { ROUTES } from '@/config/routes';
 import { LogOut } from 'lucide-react';
 import { en } from '@/localization/en';
@@ -17,7 +18,7 @@ interface SignOutButtonProps {
 export function SignOutButton({ label = en.navigation.signOut, className }: SignOutButtonProps) {
   const handleSignOut = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    await signOutCurrentUser(supabase);
     // Full reload (not router.push) so the previous session's client router cache is
     // fully discarded — prevents stale-tree 404s when switching accounts.
     window.location.assign(ROUTES.login);

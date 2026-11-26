@@ -2,6 +2,8 @@
 // Path: src/lib/errors.ts
 // Functionality: Unified error definitions, database error translation, and safe client-facing action errors.
 
+import { demo } from '@/localization/en/demo';
+
 export type ErrorCode =
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
@@ -96,6 +98,12 @@ export function toDatabaseAppError(
 
   if (!isDbErrorLike(error)) {
     return new AppError('INTERNAL_ERROR', messages.INTERNAL_ERROR ?? DEFAULT_DB_ERROR_MESSAGES.INTERNAL_ERROR, error);
+  }
+
+  // Read-only demo accounts (public.enforce_demo_readonly) get the same message on
+  // every write path, regardless of the caller's custom FORBIDDEN text.
+  if (typeof error.message === 'string' && error.message.includes(demo.readOnly)) {
+    return new AppError('FORBIDDEN', demo.readOnly, error);
   }
 
   const code = codeFromDbError(error);

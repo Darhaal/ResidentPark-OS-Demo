@@ -26,6 +26,15 @@ describe('toDatabaseAppError', () => {
     expect(toDatabaseAppError({ code: 'P0001', message: 'RATE_LIMITED: slow down' }).code).toBe('RATE_LIMITED');
   });
 
+  it('surfaces the read-only demo block as FORBIDDEN with its own message', () => {
+    const error = toDatabaseAppError(
+      { code: '42501', message: 'Demo mode: changes are disabled.' },
+      { FORBIDDEN: 'Only admins can do this.' },
+    );
+    expect(error.code).toBe('FORBIDDEN');
+    expect(error.message).toBe('Demo mode: changes are disabled.');
+  });
+
   it('uses caller-provided safe messages without exposing raw database text', () => {
     const error = toDatabaseAppError(
       { code: '23505', message: 'duplicate key value violates unique constraint vehicles_plate_number_key' },

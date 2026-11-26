@@ -4,6 +4,8 @@
 
 import type { Metadata } from 'next';
 import { APP_CONFIG } from '@/config/app';
+import { isDemoMode } from '@/config/demo';
+import { DemoBanner } from '@/components/demo/DemoBanner';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang={APP_CONFIG.locale}>
       <body className="font-sans antialiased bg-background text-foreground">
+        {isDemoMode() && <DemoBanner />}
         {children}
       </body>
     </html>

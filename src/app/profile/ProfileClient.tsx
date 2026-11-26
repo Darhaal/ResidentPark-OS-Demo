@@ -7,12 +7,14 @@
 import { useState, type ElementType, type ReactNode } from 'react';
 import { AlertCircle, CheckCircle, Lock, LogOut, Mail, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { signOutCurrentUser } from '@/lib/supabase/sign-out';
 import { updateProfileInfoAction } from '@/actions/profile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { ROUTES } from '@/config/routes';
+import { demoRoleForEmail, isDemoMode } from '@/config/demo';
 import { en } from '@/localization/en';
 
 interface Props {
@@ -25,6 +27,10 @@ type Msg = { type: 'ok' | 'err'; text: string };
 type PasswordErrorField = 'current' | 'new' | 'confirm' | null;
 
 const messages = en.profile;
+
+// Credential changes go straight to Supabase Auth (not through the database trigger
+// that makes demo accounts read-only), so the shared demo accounts are locked here.
+const isDemoAccount = (value: string) => isDemoMode() && demoRoleForEmail(value) !== null;
 
 function useMsg() {
   const [msg, setMsg] = useState<Msg | null>(null);
@@ -159,6 +165,7 @@ function PasswordSection({ email }: { email: string }) {
   const save = async () => {
     clear();
     setErrorField(null);
+    if (isDemoAccount(email)) return err(en.demo.accountLocked);
     if (next.length < 8) {
       setErrorField('new');
       return err(messages.passwordTooShort);
@@ -254,6 +261,7 @@ function EmailSection({ email }: { email: string }) {
   const save = async () => {
     clear();
     setEmailInvalid(false);
+    if (isDemoAccount(email)) return err(en.demo.accountLocked);
     if (!newEmail.trim() || !newEmail.includes('@')) {
       setEmailInvalid(true);
       return err(messages.invalidEmail);
@@ -316,7 +324,7 @@ function EmailSection({ email }: { email: string }) {
 export function ProfileClient({ email, fullName, phone }: Props) {
   const signOut = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    await signOutCurrentUser(supabase);
     // Full reload (not router.push) so the previous session's client router cache is
     // fully discarded — prevents stale-tree 404s when switching accounts.
     window.location.assign(ROUTES.login);

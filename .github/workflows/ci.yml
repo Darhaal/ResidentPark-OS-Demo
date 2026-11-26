@@ -159,6 +159,8 @@ jobs:
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
+        # A report upload must not fail the gate (e.g. when the artifact storage quota is hit).
+        continue-on-error: true
         with:
           name: playwright-report
           path: playwright-report/
@@ -196,6 +198,15 @@ jobs:
       - name: Enable email confirmations and allow the app callback redirect
         run: |
           cfg=supabase/config.toml
+          # Supabase CLI 3.4+ writes supabase/config.jsonc on init instead of config.toml.
+          # TOML stays supported, so convert and keep a single config file.
+          if [ ! -f "$cfg" ] && { [ -f supabase/config.jsonc ] || [ -f supabase/config.json ]; }; then
+            supabase config convert --to toml
+            [ -f "$cfg" ] && rm -f supabase/config.jsonc supabase/config.json
+          fi
+          if [ ! -f "$cfg" ]; then
+            echo "supabase init produced no config.toml:"; ls -la supabase; exit 1
+          fi
           sed -i 's#^site_url = .*#site_url = "http://localhost:3000"#' "$cfg"
           sed -i 's#^additional_redirect_urls = .*#additional_redirect_urls = ["http://localhost:3000", "http://localhost:3000/auth/callback", "http://127.0.0.1:3000"]#' "$cfg"
           # Scope the replacement to [auth.email]. A global replacement also enables
@@ -243,6 +254,8 @@ jobs:
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
+        # A report upload must not fail the gate (e.g. when the artifact storage quota is hit).
+        continue-on-error: true
         with:
           name: playwright-report-invite-confirm
           path: playwright-report/

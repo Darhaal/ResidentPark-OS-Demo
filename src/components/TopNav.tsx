@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import type { LucideIcon } from 'lucide-react';
 import { Bell, ChevronDown, ChevronLeft, Home, LogOut, User } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { signOutCurrentUser } from '@/lib/supabase/sign-out';
 import { isAdminRole, isApprovedStatus, isSuperadminRole } from '@/config/domain';
 import { pathMatchesRoute, ROUTES } from '@/config/routes';
 import { UI_TIMING } from '@/config/limits';
@@ -220,7 +221,7 @@ export function TopNav({ showBackButton = false, currentUser }: TopNavProps) {
     setMenuOpen(false);
     clearNavigationStack();
     const supabase = createClient();
-    await supabase.auth.signOut();
+    await signOutCurrentUser(supabase);
     // Full reload (not router.push) so the previous session's client router cache is
     // fully discarded — prevents stale-tree 404s when switching accounts.
     window.location.assign(ROUTES.login);
@@ -262,7 +263,7 @@ export function TopNav({ showBackButton = false, currentUser }: TopNavProps) {
           a scroll container (overflow/contain) and can drift during mobile address-bar
           transitions; fixed + an in-flow spacer of the same height is layout-neutral but
           can never scroll away. */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-zinc-200 bg-white shadow-sm">
+      <header className="fixed inset-x-0 top-[var(--demo-bar-h)] z-50 border-b border-zinc-200 bg-white shadow-sm">
         <div className="mx-auto flex h-14 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex h-full min-w-0 items-center gap-4">
             {showContextBackButton && (

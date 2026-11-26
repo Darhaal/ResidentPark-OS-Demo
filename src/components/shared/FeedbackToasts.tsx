@@ -20,7 +20,7 @@ export function FeedbackToasts({ successMsg, errorMsg, onClear }: FeedbackToasts
 
   return (
     <div
-      className="fixed top-20 left-1/2 z-[300] flex w-full max-w-md -translate-x-1/2 flex-col gap-2 px-4 pointer-events-none"
+      className="fixed top-[calc(5rem+var(--demo-bar-h))] left-1/2 z-[300] flex w-full max-w-md -translate-x-1/2 flex-col gap-2 px-4 pointer-events-none"
       aria-live="polite"
     >
       {successMsg && (

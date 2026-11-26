@@ -16,6 +16,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { isPasswordPolicySatisfied } from '@/config/auth';
 import { en } from '@/localization/en';
 import { ROUTES } from '@/config/routes';
+import { demoRoleForEmail, isDemoMode } from '@/config/demo';
 import { AuthAcceptanceService } from '@/services/AuthAcceptanceService';
 
 export default function ResetPasswordPage() {
@@ -44,6 +45,12 @@ export default function ResetPasswordPage() {
 
     try {
       const supabase = createClient();
+      // Shared demo accounts sign in by magic link; keep their password stable (UI-level,
+      // like the profile page; the database is read-only for them regardless).
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (isDemoMode() && demoRoleForEmail(sessionData.session?.user.email) !== null) {
+        throw new Error(en.demo.accountLocked);
+      }
       const { error: updateError } = await supabase.auth.updateUser({ password });
 
       if (updateError) throw new Error(updateError.message);

@@ -44,7 +44,7 @@ export function AdminSidePanel({ isSuperadmin }: AdminSidePanelProps) {
   return (
     <aside
       id="admin-side-panel"
-      className="fixed bottom-0 left-0 top-14 z-40 hidden w-64 flex-col overflow-hidden border-r border-zinc-200 bg-white shadow-[1px_0_0_rgba(24,24,27,0.02)] md:flex"
+      className="fixed bottom-0 left-0 top-[calc(3.5rem+var(--demo-bar-h))] z-40 hidden w-64 flex-col overflow-hidden border-r border-zinc-200 bg-white shadow-[1px_0_0_rgba(24,24,27,0.02)] md:flex"
     >
       <div className="flex h-14 shrink-0 items-center border-b border-zinc-100 px-3">
         <div className="min-w-0 pl-1">

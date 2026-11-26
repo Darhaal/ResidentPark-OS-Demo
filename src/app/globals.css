@@ -54,6 +54,15 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Height of the read-only demo bar (src/components/demo/DemoBanner.tsx). Zero unless the
+   bar is on the page; fixed chrome (TopNav, AdminSidePanel, toasts) offsets by it. */
+:root {
+  --demo-bar-h: 0px;
+}
+:root:has([data-demo-banner]) {
+  --demo-bar-h: 2.25rem;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
